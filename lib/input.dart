@@ -4,6 +4,9 @@ import 'ReusableCard.dart';
 import 'ReusableCardData.dart';
 import 'package:bmi_calculator/ConstantFile.dart';
 import 'RoundIconWidget.dart';
+import 'ResultPage.dart';
+import 'BottomButton.dart';
+import 'BrainBMI.dart';
 
 enum GenderType { male, female }
 
@@ -14,7 +17,7 @@ class InputPage extends StatefulWidget {
 
 class _InputPageState extends State<InputPage> {
   GenderType selectedGender;
- int height =150;
+ double height =5.8;
  int weight = 30;
  int age = 15;
 
@@ -77,8 +80,8 @@ class _InputPageState extends State<InputPage> {
                   textBaseline: TextBaseline.alphabetic,
 
                   children: [
-                    Text(height.toString(),style: kCardValuesStyle,),
-                    Text("CM")
+                    Text(height.toStringAsFixed(1),style: kCardValuesStyle,),
+                    Text("Foot")
                   ],
                 ),
                 SliderTheme( data: SliderTheme.of(context).copyWith(
@@ -90,13 +93,13 @@ class _InputPageState extends State<InputPage> {
                   overlayShape: RoundSliderOverlayShape(overlayRadius: 30.0)
                 ),
                   child: Slider(value: height.roundToDouble(),
-                  min: 100,
-                  max: 200,
+                  min: 2.0,
+                  max: 20.0,
 
 
                   onChanged: (newHeight){
                      setState(() {
-                       height=newHeight.round();
+                       height=newHeight.toDouble();
                      });
                   },),
                 )
@@ -198,12 +201,17 @@ class _InputPageState extends State<InputPage> {
             SizedBox(
               height: 10,
             ),
-            Container(
-              width: double.infinity,
-              color:  kBottomContainerColor,
-              height: kBottomContainerHeight,
-            )
+            BottomCard(buttonText:'CALCULATE',
+            onClick: (){
+              AppBrain brain =AppBrain(weight: weight,height: height);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ResultPage(result:brain.calculate(),resultText: brain.getResult(),resultComment: brain.getComment(),)
+                  )
+              );
+            },)
           ],
         ));
   }
 }
+
